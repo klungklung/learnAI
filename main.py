@@ -33,8 +33,8 @@ class Perceptron:
     def train(self, x, y, epochs):
         for epoch in range(epochs):
             for x_val, target in zip(x, y):
+                self.print_weights()
 
-                # x_list = [x_val] if not isinstance(x_val, (list, np.ndarray)) else list(x_val)
                 x_list = [x_val]
                 full_inputs = x_list + [1]
 
@@ -51,11 +51,15 @@ class Perceptron:
         guess = self.feedforward(inputs)
         return guess
 
+    def print_weights(self):
+        print(self.weights)
 
-x = [1, 2, 3, 4, 5, 6, 7]
-y = [2, 4, 6, 8, 10, 12, 14]
+
+learn = [1, 2, 3, 4, 5]
+target = [5, 7, 9, 11, 13]
 
 model = Perceptron(1, 0.01, activation_function="linear")
-model.train(x, y, 500)
+model.train(learn, target, 10)
+# model.print_weights()
 
-print(model.predict([35]))
+print(model.predict([4]))
