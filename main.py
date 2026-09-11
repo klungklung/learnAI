@@ -1,83 +1,70 @@
 import random
-from matplotlib import pyplot as plt
+import numpy as np
 
-perceptron = None
-training = []
-count = 0
-
-def f(x):
-    return x
-
-def setup():
-    global perceptron, x, y
-    perceptron = Perceptron(3, 0.0001)
-
-    for i in range(2000):
-        x = random.randint(-200, 200)
-        y = random.randint(-200, 200)
-        training.append([x, y, 1])
+from main_old import perceptron
 
 
 class Perceptron:
-    def __init__(self, n, learning_constant):
-        self.weights = [random.random() * 2 - 1 for _ in range(n)]
+    def __init__(self, neurons, learning_constant, activation_function: str):
+        self.weights = [random.random() * 2 - 1 for _ in range(neurons + 1)]
         self.learningConstant = learning_constant
+        self.activationFunction = activation_function
 
-    def activation(self, sum):
-        if sum > 0:
-            return 1
-        else:
-            return -1
+    def activation(self, input_value):
+        match self.activationFunction:
+            case "sigmoid":
+                return 1 / (1 + np.exp(-input_value))
+            case "relu":
+                return np.maximum(0, input_value)
+            case "tanh":
+                return np.tanh(input_value)
+            case _:
+                return input_value
 
     def feedforward(self, inputs):
-        sum = 0
+        output = 0
+        inputs += [1]
         for i in range(len(self.weights)):
-            sum += inputs[i] * self.weights[i]
+            output += inputs[i] * self.weights[i]
 
-        return self.activation(sum)
+        return self.activation(output)
 
-    def train(self, inputs, desired):
+    # def train(self, inputs, targets, epochs):
+    #     inputs = inputs + [1]
+    #     for i in range(epochs):
+    #         guess = self.feedforward(inputs)
+    #         error = targets - guess
+    #         for j in range(len(self.weights)):
+    #             self.weights[j] = self.weights[j] + error * inputs[j] * self.learningConstant
+
+
+
+    #!!! gemini... ich kann nicht mehr ich will nicht mehr ich halt das alles nd mehr aus !!!
+    def train(self, x, y, epochs):
+        for epoch in range(epochs):
+            for x_val, target in zip(x, y):
+
+                x_list = [x_val] if not isinstance(x_val, (list, np.ndarray)) else list(x_val)
+                full_inputs = x_list + [1]
+
+                guess = self.feedforward(x_list)
+                error = target - guess
+
+                for j in range(len(self.weights)):
+                    self.weights[j] += error * full_inputs[j] * self.learningConstant
+
+
+
+
+    def predict(self, inputs):
         guess = self.feedforward(inputs)
-        error = desired - guess
-        for i in range(len(self.weights)):
-            self.weights[i] = self.weights[i] + error * inputs[i] * self.learningConstant
+        return guess
 
 
-def draw():
-    global count, perceptron
+x = np.array([1, 2, 3, 4, 5, 6, 7])
+y = np.array([2, 4, 6, 8, 10, 12, 14])
 
+model = Perceptron(1, 0.01, activation_function="linear")
+model.train(x, y, 500)
 
-    for _ in range(2000):
-        x = training[count][0]
-        y = training[count][1]
-
-        desired = -1
-        if y > f(x):
-            desired = 1
-
-        perceptron.train(training[count], desired)
-        count = (count + 1) % len(training)
-
-    x_over, y_over = [], []
-    x_under, y_under = [], []
-
-    for datapoint in training:
-        guess = perceptron.feedforward(datapoint)
-        if guess > 0:
-            x_over.append(datapoint[0])
-            y_over.append(datapoint[1])
-        else:
-            x_under.append(datapoint[0])
-            y_under.append(datapoint[1])
-
-    plt.scatter(x_over, y_over, color='violet')
-    plt.scatter(x_under, y_under, color='red')
-
-setup()
-
-x = [-200, 200]
-y = [f(i) for i in x]
-
-plt.plot(x, y)
-draw()
-plt.show()
+print(model.predict([35]))
