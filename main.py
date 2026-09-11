@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-from main_old import perceptron
+# from main_old import perceptron
 
 
 class Perceptron:
@@ -23,28 +23,19 @@ class Perceptron:
 
     def feedforward(self, inputs):
         output = 0
-        inputs += [1]
+        full_inputs = inputs + [1]
         for i in range(len(self.weights)):
-            output += inputs[i] * self.weights[i]
+            output += full_inputs[i] * self.weights[i]
 
         return self.activation(output)
 
-    # def train(self, inputs, targets, epochs):
-    #     inputs = inputs + [1]
-    #     for i in range(epochs):
-    #         guess = self.feedforward(inputs)
-    #         error = targets - guess
-    #         for j in range(len(self.weights)):
-    #             self.weights[j] = self.weights[j] + error * inputs[j] * self.learningConstant
 
-
-
-    #!!! gemini... ich kann nicht mehr ich will nicht mehr ich halt das alles nd mehr aus !!!
     def train(self, x, y, epochs):
         for epoch in range(epochs):
             for x_val, target in zip(x, y):
 
-                x_list = [x_val] if not isinstance(x_val, (list, np.ndarray)) else list(x_val)
+                # x_list = [x_val] if not isinstance(x_val, (list, np.ndarray)) else list(x_val)
+                x_list = [x_val]
                 full_inputs = x_list + [1]
 
                 guess = self.feedforward(x_list)
@@ -61,8 +52,8 @@ class Perceptron:
         return guess
 
 
-x = np.array([1, 2, 3, 4, 5, 6, 7])
-y = np.array([2, 4, 6, 8, 10, 12, 14])
+x = [1, 2, 3, 4, 5, 6, 7]
+y = [2, 4, 6, 8, 10, 12, 14]
 
 model = Perceptron(1, 0.01, activation_function="linear")
 model.train(x, y, 500)
