@@ -12,7 +12,7 @@ class Perceptron:
 
 
     def softmax(self, input_value):
-        return np.exp(x) / np.sum(np.exp(x), axis=0)
+        return np.exp(input_value) / np.sum(np.exp(input_value), axis=0)
 
     def activation(self, input_value):
         match self.activationFunction:
@@ -39,37 +39,28 @@ class Perceptron:
 
         for epoch in range(epochs):
 
-            for x_val, target in zip(x, y):
-                print(self.get_weights())
+            for learn, target in zip(x, y):
+                # print(self.get_weights())
 
-                x_list = [x_val]
-                full_inputs = x_list + [1]
+                x_list = [learn] + [1]
 
                 guess = self.feedforward(x_list)
                 error = target - guess
 
 
                 for j in range(len(self.weights)):
-                    self.weights[j] += error * full_inputs[j] * self.learningConstant
-            print(error)
-
-
-
-
-
-    def predict(self, inputs):
-        guess = self.feedforward(inputs)
-        return guess
+                    self.weights[j] += error * x_list[j] * self.learningConstant
+            # print(error)
 
     def get_weights(self):
         return self.weights
 
 
-learn = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-target = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+learn_set = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+target_set = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
 
 model = Perceptron(1, 0.01, activation_function="linear")
-model.train(learn, target, 3000)
+model.train(learn_set, target_set, 3000)
 # model.print_weights()
 
-print(model.predict([23]))
+print(model.feedforward([23]))
