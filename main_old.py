@@ -6,7 +6,7 @@ training = []
 count = 0
 
 def f(x):
-    return 2 * x - 4
+    return x
 
 def setup():
     global perceptron, x, y

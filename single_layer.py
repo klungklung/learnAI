@@ -57,10 +57,12 @@ class Perceptron:
 
 
 learn_set = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-target_set = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+target_set = [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
 
 model = Perceptron(1, 0.01, activation_function="linear")
 model.train(learn_set, target_set, 3000)
 # model.print_weights()
+
+
 
 print(model.feedforward([23]))
